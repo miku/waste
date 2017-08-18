@@ -7,9 +7,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/moby/moby/api/types"
-	"github.com/moby/moby/api/types/container"
-	"github.com/moby/moby/client"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 )
 
 var listen = flag.String("l", "localhost:3000", "hostport")
@@ -23,14 +23,14 @@ func main() {
 			http.Error(w, "cannot create docker client", http.StatusInternalServerError)
 			return
 		}
-		_, err := c.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
+		_, err = c.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
 		if err != nil {
 			http.Error(w, "cannot pull image", http.StatusInternalServerError)
 			return
 		}
 		resp, err := c.ContainerCreate(ctx, &container.Config{
 			Image: "alpine",
-			Cmd: []string{"uname", "-a"}
+			Cmd:   []string{"uname", "-a"},
 		}, nil, nil, "")
 
 		if err != nil {
@@ -38,11 +38,11 @@ func main() {
 			return
 		}
 
-		if err := c.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		if err = c.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 			http.Error(w, "cannot start container", http.StatusInternalServerError)
 			return
 		}
-		if err := c.ContainerWait(ctx, resp.ID); err != nil {
+		if _, err = c.ContainerWait(ctx, resp.ID); err != nil {
 			http.Error(w, "container wait failed", http.StatusInternalServerError)
 			return
 		}
