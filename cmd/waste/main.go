@@ -18,16 +18,22 @@ func main() {
 	flag.Parse()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.Background()
+
+		log.Println("creating new docker client")
 		c, err := client.NewEnvClient()
 		if err != nil {
 			http.Error(w, "cannot create docker client", http.StatusInternalServerError)
 			return
 		}
+
+		log.Println("pulling image")
 		_, err = c.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
 		if err != nil {
 			http.Error(w, "cannot pull image", http.StatusInternalServerError)
 			return
 		}
+
+		log.Println("creating container")
 		resp, err := c.ContainerCreate(ctx, &container.Config{
 			Image: "alpine",
 			Cmd:   []string{"uname", "-a"},
@@ -38,14 +44,18 @@ func main() {
 			return
 		}
 
+		log.Printf("starting container: %s", resp.ID)
 		if err = c.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 			http.Error(w, "cannot start container", http.StatusInternalServerError)
 			return
 		}
+
+		log.Printf("waiting for container: %s", resp.ID)
 		if _, err = c.ContainerWait(ctx, resp.ID); err != nil {
 			http.Error(w, "container wait failed", http.StatusInternalServerError)
 			return
 		}
+
 		out, err := c.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
 		if err != nil {
 			http.Error(w, "cannot access logs", http.StatusInternalServerError)
@@ -53,6 +63,12 @@ func main() {
 		}
 		if _, err := io.Copy(w, out); err != nil {
 			http.Error(w, "cannot write response", http.StatusInternalServerError)
+			return
+		}
+
+		log.Printf("removing container: %s", resp.ID)
+		if err := c.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{}); err != nil {
+			http.Error(w, "cannot remove container", http.StatusInternalServerError)
 			return
 		}
 	})
