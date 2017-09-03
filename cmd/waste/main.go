@@ -6,25 +6,31 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/miku/waste"
 	log "github.com/sirupsen/logrus"
 )
 
-var listen = flag.String("listen", "localhost:3000", "hostport")
+var (
+	listen    = flag.String("listen", "localhost:3000", "hostport")
+	imageRef  = flag.String("ref", "docker.io/library/alpine", "image reference")
+	imageName = flag.String("image", "alpine", "image name")
+)
 
 func main() {
 	flag.Parse()
-
 	log.SetLevel(log.DebugLevel)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
 		var buf bytes.Buffer
 		wrapper := waste.WrapDocker{
-			ImageLocation: "docker.io/library/alpine",
-			ImageName:     "alpine",
-			Cmd:           []string{"uname", "-a"},
-			Writer:        &buf,
+			ImageRef:  *imageRef,
+			ImageName: *imageName,
+			Cmd:       []string{"uname", "-a"},
+			Writer:    &buf,
+			Timeout:   5 * time.Second,
 		}
 
 		if err := wrapper.Run(); err != nil {
