@@ -12,7 +12,7 @@ import (
 	"github.com/docker/docker/client"
 )
 
-var listen = flag.String("l", "localhost:3000", "hostport")
+var listen = flag.String("listen", "localhost:3000", "hostport")
 
 func main() {
 	flag.Parse()
@@ -20,21 +20,21 @@ func main() {
 		ctx := context.Background()
 
 		log.Println("creating new docker client")
-		c, err := client.NewEnvClient()
+		cli, err := client.NewEnvClient()
 		if err != nil {
 			http.Error(w, "cannot create docker client", http.StatusInternalServerError)
 			return
 		}
 
 		log.Println("pulling image")
-		_, err = c.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
+		_, err = cli.ImagePull(ctx, "docker.io/library/alpine", types.ImagePullOptions{})
 		if err != nil {
 			http.Error(w, "cannot pull image", http.StatusInternalServerError)
 			return
 		}
 
 		log.Println("creating container")
-		resp, err := c.ContainerCreate(ctx, &container.Config{
+		resp, err := cli.ContainerCreate(ctx, &container.Config{
 			Image: "alpine",
 			Cmd:   []string{"uname", "-a"},
 		}, nil, nil, "")
@@ -45,18 +45,18 @@ func main() {
 		}
 
 		log.Printf("starting container: %s", resp.ID)
-		if err = c.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		if err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 			http.Error(w, "cannot start container", http.StatusInternalServerError)
 			return
 		}
 
 		log.Printf("waiting for container: %s", resp.ID)
-		if _, err = c.ContainerWait(ctx, resp.ID); err != nil {
+		if _, err = cli.ContainerWait(ctx, resp.ID); err != nil {
 			http.Error(w, "container wait failed", http.StatusInternalServerError)
 			return
 		}
 
-		out, err := c.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+		out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
 		if err != nil {
 			http.Error(w, "cannot access logs", http.StatusInternalServerError)
 			return
@@ -67,7 +67,7 @@ func main() {
 		}
 
 		log.Printf("removing container: %s", resp.ID)
-		if err := c.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{}); err != nil {
+		if err := cli.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{}); err != nil {
 			http.Error(w, "cannot remove container", http.StatusInternalServerError)
 			return
 		}
