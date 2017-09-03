@@ -14,12 +14,41 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const version = "0.1.0"
+
 var (
 	listen    = flag.String("listen", "localhost:3000", "hostport")
 	imageRef  = flag.String("ref", "docker.io/library/alpine", "image reference")
 	imageName = flag.String("image", "alpine", "image name")
 	timeout   = flag.Duration("timeout", 10*time.Second, "timeout")
 )
+
+var banner = fmt.Sprintf(`
+██╗    ██╗ █████╗ ███████╗████████╗███████╗
+██║    ██║██╔══██╗██╔════╝╚══██╔══╝██╔════╝
+██║ █╗ ██║███████║███████╗   ██║   █████╗  
+██║███╗██║██╔══██║╚════██║   ██║   ██╔══╝  
+╚███╔███╔╝██║  ██║███████║   ██║   ███████╗
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
+                                           
+
+Welcome to waste - your premium "cat as a service" provider.
+
+This server accepts HTTP requests and will copy the request body into a
+container, run the "cat" command on the input and stream the output back to
+stdout.
+
+Example, inspect a local file:
+
+    $ curl http://%s --data-binary @README.md
+
+Or run the docker webpage to a docker container first:
+
+    $ curl http://%s --data-binary @<(curl -s http://www.docker.io)
+
+Version: %s
+Startup: %s
+`, *listen, version, time.Now())
 
 func main() {
 	flag.Parse()
@@ -60,7 +89,7 @@ func main() {
 		}
 		log.Debug("archived ", n, " bytes from request body")
 
-		// Collection container output here.
+		// Collect container output here.
 		var bufOut bytes.Buffer
 
 		wrapper := waste.WrapDocker{
@@ -89,6 +118,6 @@ func main() {
 		io.WriteString(w, "\n")
 		log.Debug("operation finished successfully")
 	})
-	log.Printf("listening on %s", *listen)
+	fmt.Println(banner)
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
