@@ -45,9 +45,9 @@ Example, inspect a local file:
 
     $ curl http://<SERVER> --data-binary @README.md
 
-Or run the docker webpage to a docker container first:
+Or run the docker homepage to a docker container first:
 
-    $ curl http://<SERVER> --data-binary @<(curl -sL http://www.docker.io)
+    $ curl http://<SERVER> --data-binary @<(curl -sL http://www.docker.com)
 
 Version: %s
 Startup: %s
