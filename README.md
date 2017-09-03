@@ -1,8 +1,9 @@
 waste
 =====
 
-Waste is just an weekend experiment playing around with the Docker SDK. This
-service does nothing useful, but it does it containerized.
+Waste is just an weekend experiment playing around with the [Docker
+SDK](https://docs.docker.com/engine/api/sdks/). This service does nothing
+useful, but it does it containerized.
 
 Basically it works like this: An HTTP request comes in, a tar archive is
 created from the request body, which is copied to a freshly created container
