@@ -76,16 +76,6 @@ SOFTWARE.
 The log of the server will tell you what is going on:
 
 ```shell
-DEBU[0056] request body contains newlines: false
-DEBU[0056] archived 1070 bytes from request body
-DEBU[0056] running with a timeout of 10s
-DEBU[0056] creating new docker client
-DEBU[0056] pulling image from docker.io/library/alpine
-DEBU[0059] creating container from alpine
-DEBU[0059] copying data into container
-DEBU[0059] 512 bytes written into container
-DEBU[0059] stat: {body 0 -rw-r--r-- 2017-09-03 16:26:07 +0000 UTC }
-DEBU[0059] starting container f5ee0d60f89cb2542284c6393b51dd355aa492aa8126b80cc0e36648773fe91f
 DEBU[0059] request body contains newlines: true
 DEBU[0059] archived 1070 bytes from request body
 DEBU[0059] running with a timeout of 10s
