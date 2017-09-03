@@ -86,6 +86,7 @@ func main() {
 				http.StatusInternalServerError)
 			return
 		}
+		io.WriteString(w, "\n")
 		log.Debug("operation finished successfully")
 	})
 	log.Printf("listening on %s", *listen)
