@@ -1,15 +1,15 @@
 waste
 =====
 
-Waste is just an weekend experiment playing around with the [Docker
+This is just an weekend experiment playing around with the [Docker
 SDK](https://docs.docker.com/engine/api/sdks/). This service does nothing
 useful, but it does it in a containerized fashion.
 
-Basically it works like this: An HTTP request comes in, a tar archive is
-created from the request body, which is copied to a freshly created container
-(alpine by default). A single command is run inside the container to display
-the content of the file. The stdout of the command is streamed back to the HTTP
-client. That's all. And yes, it even has a timeout.
+Basically: An *HTTP request* comes in, a *tar archive* is created from the
+request body, which is *copied* to a freshly created *container* (alpine by
+default). A single *command* is run inside the container to display the content
+of the file. The *stdout* of the command is *streamed* back to the HTTP client.
+That's all. And yes, it even has a timeout.
 
 To start the waste server, simply:
 
