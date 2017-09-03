@@ -120,8 +120,10 @@ func main() {
 		io.WriteString(w, "\n")
 		log.Debug("operation finished successfully")
 	})
+
 	fmt.Println(banner)
 
+	// Make sure docker runs, or fail early.
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		log.Fatal(err)
@@ -131,5 +133,6 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Debug("docker is up: ", ping.APIVersion)
+
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
