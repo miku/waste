@@ -34,7 +34,7 @@ Example, inspect a local file:
 
     $ curl http://localhost:3000 --data-binary @README.md
 
-Or run the docker webpage to a docker container first:
+Or run the docker webpage through a docker container first:
 
     $ curl http://localhost:3000 --data-binary @<(curl -s http://www.docker.io)
 
