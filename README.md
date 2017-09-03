@@ -36,7 +36,7 @@ Example, inspect a local file:
 
 Or run the docker webpage through a docker container first:
 
-    $ curl http://localhost:3000 --data-binary @<(curl -s http://www.docker.io)
+    $ curl http://localhost:3000 --data-binary @<(curl -sL http://www.docker.io)
 
 Version: 0.1.0
 Startup: 2017-09-03 18:25:10.953849056 +0200 CEST m=+0.004078683
