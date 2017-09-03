@@ -92,6 +92,16 @@ DEBU[0006] removing container ce1e84c442ab22579110b40537e6485d0a872bc81cbb2e165d
 DEBU[0006] operation finished successfully
 ```
 
+Try
+---
+
+```
+$ git clone https://github.com/miku/waste.git
+$ cd waste
+$ make
+$ ./waste
+```
+
 Resources
 ---------
 
