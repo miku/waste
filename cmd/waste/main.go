@@ -11,9 +11,9 @@ import (
 	"net/http"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/miku/waste"
 	"github.com/moby/moby/client"
-	log "github.com/sirupsen/logrus"
 )
 
 const version = "0.1.0"
@@ -83,13 +83,13 @@ func main() {
 				http.StatusInternalServerError)
 			return
 		}
-		n, err := io.Copy(tw, bytes.NewReader(b))
+		_, err = io.Copy(tw, bytes.NewReader(b))
 		if err != nil {
 			http.Error(w, fmt.Sprintf("could not tar content: %s", err),
 				http.StatusInternalServerError)
 			return
 		}
-		log.Debug("archived ", n, " bytes from request body")
+		log.Debug("archived ", len(b), " bytes from request body")
 
 		// Collect container output here.
 		var bufOut bytes.Buffer

@@ -7,10 +7,10 @@ import (
 	"io"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
-	log "github.com/sirupsen/logrus"
 )
 
 // WrapDocker wraps information we need to run the isolated process. Reader is
