@@ -3,6 +3,7 @@ package waste
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"io"
 	"time"
 
@@ -12,11 +13,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// WrapDocker wraps information we need to run the isolated process.
+// WrapDocker wraps information we need to run the isolated process. Reader is
+// read and saved inside the container. Writer collects stdout and stderr.
 type WrapDocker struct {
 	ImageRef  string
 	ImageName string
 	Cmd       []string
+	Reader    io.Reader
 	Writer    io.Writer
 	Timeout   time.Duration
 }
@@ -25,7 +28,7 @@ type WrapDocker struct {
 func (w WrapDocker) Run() error {
 	ctx := context.Background()
 	if w.Timeout > 0 {
-		log.Debug("running with a timeout of %v", w.Timeout)
+		log.Debug("running with a timeout of ", w.Timeout)
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, w.Timeout)
 		defer cancel()
@@ -45,16 +48,13 @@ func (w WrapDocker) Run() error {
 
 	log.Debug("creating container from ", w.ImageName)
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: w.ImageName,
-		Cmd:   w.Cmd,
+		Image:           w.ImageName,
+		Cmd:             w.Cmd,
+		NetworkDisabled: true,
+		Tty:             true,
 	}, nil, nil, "")
 
 	if err != nil {
-		return err
-	}
-
-	log.Debug("starting container ", resp.ID)
-	if err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
 		return err
 	}
 
@@ -62,6 +62,28 @@ func (w WrapDocker) Run() error {
 		log.Debug("removing container ", resp.ID)
 		err = cli.ContainerRemove(ctx, resp.ID, types.ContainerRemoveOptions{})
 	}()
+
+	cr := &Counter{r: w.Reader}
+
+	log.Debug("copying data into container")
+	if err = cli.CopyToContainer(ctx, resp.ID, "/mnt", cr,
+		types.CopyToContainerOptions{}); err != nil {
+		return err
+	}
+
+	log.Debug(cr.N(), " bytes written into container")
+
+	stat, err := cli.ContainerStatPath(ctx, resp.ID, "/mnt/body")
+	if err != nil {
+		return err
+	}
+
+	log.Debug(fmt.Sprintf("stat: %v", stat))
+
+	log.Debug("starting container ", resp.ID)
+	if err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		return err
+	}
 
 	log.Debug("waiting for container ", resp.ID)
 	if _, err = cli.ContainerWait(ctx, resp.ID); err != nil {
