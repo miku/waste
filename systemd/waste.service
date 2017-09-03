@@ -1,0 +1,10 @@
+[Unit]
+Description=Waste service (https://github.com/miku/waste)
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/waste -ref armhf/alpine -image armhf/alpine -listen 0.0.0.0:4573
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
