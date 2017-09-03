@@ -3,6 +3,7 @@ package main
 import (
 	"archive/tar"
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	"github.com/miku/waste"
+	"github.com/moby/moby/client"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -48,7 +50,7 @@ Or run the docker webpage to a docker container first:
 
 Version: %s
 Startup: %s
-`, *listen, version, time.Now())
+`, *listen, *listen, version, time.Now())
 
 func main() {
 	flag.Parse()
@@ -119,5 +121,15 @@ func main() {
 		log.Debug("operation finished successfully")
 	})
 	fmt.Println(banner)
+
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		log.Fatal(err)
+	}
+	ping, err := cli.Ping(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Debug("docker is up: ", ping.APIVersion)
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
