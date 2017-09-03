@@ -76,24 +76,20 @@ SOFTWARE.
 The log of the server will tell you what is going on:
 
 ```shell
-DEBU[0059] request body contains newlines: true
-DEBU[0059] archived 1070 bytes from request body
-DEBU[0059] running with a timeout of 10s
-DEBU[0059] creating new docker client
-DEBU[0059] pulling image from docker.io/library/alpine
-DEBU[0059] waiting for container f5ee0d60f89cb2542284c6393b51dd355aa492aa8126b80cc0e36648773fe91f
-DEBU[0060] 0 bytes read from application
-DEBU[0060] removing container f5ee0d60f89cb2542284c6393b51dd355aa492aa8126b80cc0e36648773fe91f
-DEBU[0060] operation finished successfully
-DEBU[0061] creating container from alpine
-DEBU[0061] copying data into container
-DEBU[0061] 1582 bytes written into container
-DEBU[0061] stat: {body 1070 -rw-r--r-- 2017-09-03 16:26:10 +0000 UTC }
-DEBU[0061] starting container f9dc98df5ed0b401d21127940bd1007aec2997de77fcdb485dcfa1528a0f4c22
-DEBU[0062] waiting for container f9dc98df5ed0b401d21127940bd1007aec2997de77fcdb485dcfa1528a0f4c22
-DEBU[0062] 1091 bytes read from application
-DEBU[0062] removing container f9dc98df5ed0b401d21127940bd1007aec2997de77fcdb485dcfa1528a0f4c22
-DEBU[0062] operation finished successfully
+DEBU[0001] request body contains newlines: true
+DEBU[0001] archived 1070 bytes from request body
+DEBU[0001] running with a timeout of 10s
+DEBU[0001] creating new docker client
+DEBU[0001] pulling image from docker.io/library/alpine
+DEBU[0005] creating container from alpine
+DEBU[0005] copying data into container
+DEBU[0005] 1582 bytes written into container
+DEBU[0005] stat: {body 1070 -rw-r--r-- 2017-09-03 16:34:07 +0000 UTC }
+DEBU[0005] starting container ce1e84c442ab22579110b40537e6485d0a872bc81cbb2e165de2c6fabc254b4d
+DEBU[0006] waiting for container ce1e84c442ab22579110b40537e6485d0a872bc81cbb2e165de2c6fabc254b4d
+DEBU[0006] 1091 bytes read from application
+DEBU[0006] removing container ce1e84c442ab22579110b40537e6485d0a872bc81cbb2e165de2c6fabc254b4d
+DEBU[0006] operation finished successfully
 ```
 
 Resources
