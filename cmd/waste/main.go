@@ -12,8 +12,8 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/docker/docker/client"
 	"github.com/miku/waste"
-	"github.com/moby/moby/client"
 )
 
 const version = "0.1.0"

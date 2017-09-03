@@ -86,8 +86,11 @@ func (w WrapDocker) Run() error {
 	}
 
 	log.Debug("waiting for container ", resp.ID)
-	if _, err = cli.ContainerWait(ctx, resp.ID); err != nil {
+	resultC, errC := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
+	select {
+	case err := <-errC:
 		return err
+	case <-resultC:
 	}
 
 	reader, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})

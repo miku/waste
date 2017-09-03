@@ -22,5 +22,18 @@
 
 
 [[constraint]]
-  name = "github.com/moby/moby"
-  version = "1.13.1"
+  name = "github.com/Sirupsen/logrus"
+  version = "1.0.3"
+
+# https://git.io/v5EkY
+[[constraint]]
+  name = "github.com/docker/docker"
+  revision = "9b4a616e4b3819ef062780b5fd854616be2c22bb"
+
+[[override]]
+  name = "github.com/docker/distribution"
+  branch = "master"
+
+[[override]]
+  name = "github.com/docker/go-connections"
+  branch = "master"
