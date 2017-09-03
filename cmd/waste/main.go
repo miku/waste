@@ -58,7 +58,7 @@ func main() {
 	log.SetLevel(log.DebugLevel)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
+		log.Debug("service request from ", r.RemoteAddr)
 		b, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("could not read request body: %s", err),
