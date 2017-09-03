@@ -45,7 +45,7 @@ DEBU[0000] docker is up: 1.30
 
 ```
 
-On a different shell curl something to the server:
+In a different terminal curl something to the server:
 
 ```shell
 $ curl http://localhost:3000 --data-binary @LICENSE
@@ -95,7 +95,7 @@ DEBU[0006] operation finished successfully
 Try
 ---
 
-```
+```shell
 $ git clone https://github.com/miku/waste.git
 $ cd waste
 $ make
