@@ -4,13 +4,11 @@ import (
 	"bufio"
 	"context"
 	"io"
-	"log"
-	"net/http"
 	"time"
 
-	"github.com/moby/moby/api/types"
-	"github.com/moby/moby/api/types/container"
-	"github.com/moby/moby/client"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/client"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -55,8 +53,7 @@ func (w WrapDocker) Run() error {
 	}, nil, nil, "")
 
 	if err != nil {
-		http.Error(w, "cannot create container", http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	log.Debug("starting container %s", resp.ID)
@@ -81,7 +78,7 @@ func (w WrapDocker) Run() error {
 	defer reader.Close()
 	n, err := io.Copy(w.Writer, reader)
 	log.Debug("%d bytes read from application", n)
-	if bw, ok := w.Writer.(bufio.Writer); ok {
+	if bw, ok := w.Writer.(*bufio.Writer); ok {
 		bw.Flush()
 	}
 	return err
