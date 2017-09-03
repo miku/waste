@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -42,15 +43,15 @@ stdout.
 
 Example, inspect a local file:
 
-    $ curl http://%s --data-binary @README.md
+    $ curl http://<SERVER> --data-binary @README.md
 
 Or run the docker webpage to a docker container first:
 
-    $ curl http://%s --data-binary @<(curl -sL http://www.docker.io)
+    $ curl http://<SERVER> --data-binary @<(curl -sL http://www.docker.io)
 
 Version: %s
 Startup: %s
-`, *listen, *listen, version, time.Now())
+`, version, time.Now())
 
 func main() {
 	flag.Parse()
@@ -121,7 +122,7 @@ func main() {
 		log.Debug("operation finished successfully")
 	})
 
-	fmt.Println(banner)
+	fmt.Println(strings.Replace(banner, "<SERVER>", *listen, -1))
 
 	// Make sure docker runs, or fail early.
 	cli, err := client.NewEnvClient()
@@ -133,6 +134,5 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Debug("docker is up: ", ping.APIVersion)
-
 	log.Fatal(http.ListenAndServe(*listen, nil))
 }
