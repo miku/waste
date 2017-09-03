@@ -24,7 +24,7 @@ $ waste
  ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝
 
 
-Welcome to waste - your premium "cat as a service" provider.
+Welcome to waste - your friendly "cat as a service" provider.
 
 This server accepts HTTP requests and will copy the request body into a
 container, run the "cat" command on the input and stream the output back to
