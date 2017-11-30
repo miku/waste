@@ -46,6 +46,16 @@ func (w WrapDocker) Run() error {
 		return err
 	}
 
+	imgs, err := cli.ImageList(ctx, types.ImageListOptions{})
+	if err != nil {
+		return err
+	}
+
+	log.Printf("host has %d images", len(imgs))
+	for _, summary := range imgs {
+		log.Printf("%s: %s", summary.ID, summary.Created)
+	}
+
 	log.Debug("creating container from ", w.ImageName)
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image:           w.ImageName,
