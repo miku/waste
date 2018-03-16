@@ -105,8 +105,8 @@ $ ./waste
 Don't be too new
 ----------------
 
-````
-    $ DOCKER_API_VERSION=1.35 ./waste
+```shell
+$ DOCKER_API_VERSION=1.35 ./waste
 ```
 
 Resources
