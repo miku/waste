@@ -51,10 +51,6 @@ Or run the docker homepage to a docker container first:
 
 Version: %s
 Startup: %s
-
-Don't be too new!
-
-> failed to run container: Error response from daemon: client version 1.37 is too new. Maximum supported API version is 1.35
 `, version, time.Now())
 
 func main() {

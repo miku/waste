@@ -53,7 +53,7 @@ func (w WrapDocker) Run() error {
 
 	log.Printf("host has %d images", len(imgs))
 	for _, summary := range imgs {
-		log.Printf("%s: %s", summary.ID, summary.Created)
+		log.Printf("%s: %d", summary.ID, summary.Created)
 	}
 
 	log.Debug("creating container from ", w.ImageName)
